@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'board',
     'user',
-    'main'
+    'main',
+    'crawling'
 ]
 
 MIDDLEWARE = [

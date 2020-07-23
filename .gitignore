@@ -1,1 +1,5 @@
 /sql_settings.py
+/crawling/
+/board/migrations/
+/main/migrations/
+/user/migrations/
