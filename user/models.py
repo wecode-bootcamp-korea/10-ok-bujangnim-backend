@@ -11,7 +11,7 @@ class User(models.Model):
     password = models.CharField(max_length = 255)
     is_activated = models.CharField(max_length = 10, default='Y', null=False, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField()
+    updated_at = models.DateTimeField(auto_now_add = True)
 
     class Meta:
         db_table = 'users'
@@ -24,7 +24,7 @@ class Cart(models.Model):
     product = models.ForeignKey(Product,on_delete = models.CASCADE)
     is_activated = models.CharField(max_length = 10, default='Y', null=False, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField()
+    updated_at = models.DateTimeField(auto_now_add = True)
 
     class Meta:
         db_table = 'carts'
