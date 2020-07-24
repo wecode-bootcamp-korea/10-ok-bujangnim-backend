@@ -3,3 +3,6 @@
 /board/migrations/
 /main/migrations/
 /user/migrations/
+*.pyc
+staticfiles
+.env

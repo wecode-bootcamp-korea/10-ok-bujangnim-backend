@@ -22,10 +22,18 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+#로컬
 SECRET_KEY = ')==157%6ubwdd_#v+2awe*q9tlsu^jo1-fmxf+w_f5svd0z0h='
 
+#배포시
+#SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', ')==157%6ubwdd_#v+2awe*q9tlsu^jo1-fmxf+w_f5svd0z0h=')
+
 # SECURITY WARNING: don't run with debug turned on in production!
+#로컬
 DEBUG = True
+#히로꾸배포할경우
+#DEBUG = bool( os.environ.get('DJANGO_DEBUG', True) )
+
 
 ALLOWED_HOSTS = ['*']
 
@@ -42,7 +50,7 @@ INSTALLED_APPS = [
     'board',
     'user',
     'main',
-    'crawling'
+    'read'
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

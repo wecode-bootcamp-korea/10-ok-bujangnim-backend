@@ -88,7 +88,7 @@ class HowToUse(models.Model):
 class Characteristic(models.Model):
     product = models.ForeignKey(Product,on_delete = models.CASCADE)
     texture = models.CharField(max_length = 255)
-    smell = models.CharField(max_length = 255)
+    scent = models.CharField(max_length = 255)
     is_activated = models.CharField(max_length = 10, default='Y', null=False, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField()
@@ -98,7 +98,6 @@ class Characteristic(models.Model):
 
     def __str__(self):
         return self.product.name
-
 
 class Ingredient(models.Model):
     product = models.ForeignKey(Product,on_delete = models.CASCADE)
