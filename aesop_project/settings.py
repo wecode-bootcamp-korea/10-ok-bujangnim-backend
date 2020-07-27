@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'main',
     'crawling',
     'corsheaders',
-    
+    'sub'
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
