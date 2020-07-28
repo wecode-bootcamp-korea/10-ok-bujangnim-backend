@@ -79,7 +79,6 @@ INSTALLED_APPS = [
     'user',
     'main',
     'read',
-    'crawling'
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
