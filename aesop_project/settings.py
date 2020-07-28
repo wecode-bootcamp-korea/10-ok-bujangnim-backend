@@ -22,50 +22,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-#로컬
 SECRET_KEY = ')==157%6ubwdd_#v+2awe*q9tlsu^jo1-fmxf+w_f5svd0z0h='
 
-#배포시
-#SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', ')==157%6ubwdd_#v+2awe*q9tlsu^jo1-fmxf+w_f5svd0z0h=')
-
 # SECURITY WARNING: don't run with debug turned on in production!
-#로컬
 DEBUG = True
-#배포시
-#DEBUG = bool( os.environ.get('DJANGO_DEBUG', True) )
 
 ALLOWED_HOSTS = ['*']
 
-CORS_ORIGIN_WHITELIST = [
-    "http://localhost:3000"
-]
 
-CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:3000"
-]
-
-CORS_ORIGIN_ALLOW_ALL = True
-
-CORS_ALLOW_METHODS = (
-    'DELETE',
-    'GET',
-    'OPTIONS',
-    'PATCH',
-    'POST',
-    'PUT',
-)
-
-CORS_ALLOW_HEADERS = (
-    'accept',
-    'accept-encoding',
-    'authorization',
-    'content-type',
-    'dnt',
-    'origin',
-    'user-agent',
-    'x-csrftoken',
-    'x-requested-with',
-)
 # Application definition
 
 INSTALLED_APPS = [
@@ -78,7 +42,6 @@ INSTALLED_APPS = [
     'board',
     'user',
     'main',
-    'read',
     'crawling'
 ]
 MIDDLEWARE = [
