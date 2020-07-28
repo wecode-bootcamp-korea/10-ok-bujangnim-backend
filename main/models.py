@@ -16,6 +16,9 @@ class Catalog(models.Model):
 class Category(models.Model):
     catalog = models.ForeignKey(Catalog, on_delete = models.CASCADE)
     name = models.CharField(max_length = 255)
+    description_title = models.CharField(max_length=255, default='', null=True)
+    description = models.CharField(max_length=255, default='', null=True)
+    description_content = models.CharField(max_length=255, default='', null=True)
     is_activated = models.CharField(max_length = 10, default='Y', null=False, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField()
@@ -25,4 +28,3 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
-

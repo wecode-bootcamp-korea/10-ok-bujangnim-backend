@@ -12,13 +12,14 @@ def get(request, product_id):
         'facetypeproduct_set__faceType',
         'usability_set',
         'ingredient_set',
-        'howtouse_set', 'characteristic_set').filter(id=product_id)
+        'howtouse_set', 'characteristic_set', 'recommendation_set__recommendationitems_set').filter(id=product_id)
+
 
     product_result = [{
         'id': product.id,
         'category_id': product.category_id,
-        'name': product.name,
         'image_url': product.image_set.all()[0].image_url,
+        'name': product.name,
         'description': product.description,
         'skin_types': [
             {
@@ -43,7 +44,11 @@ def get(request, product_id):
         'amount': product.howtouse_set.all()[0].amount,
         'texture': product.characteristic_set.all()[0].texture,
         'scent': product.characteristic_set.all()[0].scent,
-
+        'recommendation_desctiption': product.recommendation_set.all()[0].description,
+        'recommendation_items': [{
+            'id': recommendation_item.product.id,
+            'product': recommendation_item.product.name,
+        } for recommendation_item in product.recommendation_set.all()[0].recommendationitems_set.all()]
 
     } for product in product_item]
 
