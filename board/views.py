@@ -49,6 +49,9 @@ class GetBoardByCategory(View):
     def get(self, request, catalog_id, category_id):
         catalog = Catalog.objects.filter(id=catalog_id).values()
         category_list = Category.objects.filter(is_activated='Y').values()
+
+        next_category = category_list[category_id] if category_list[category_id] is not None else 'None'
+
         product_items = Category.objects.filter(id=category_id, is_activated='Y').prefetch_related(
             'product_set',
             'product_set__pricebysize_set',
@@ -63,6 +66,7 @@ class GetBoardByCategory(View):
                 'description_title': category.description_title,
                 'description_content': category.description_content
             },
+            'next_category': next_category,
             'products': [{
                 'id': product.id,
                 'category_id': product.category_id,
@@ -88,7 +92,7 @@ class GetBoardByCategory(View):
 
         return JsonResponse({'result': 'SUCCESS',
                              'data': {'catalog': list(catalog), 'category': list(category_list),
-                                      'products': list(product_items_result)}}, status=200)
+                                      'item': list(product_items_result)}}, status=200)
 
 class GetProductById(View):
     def get(self, request, product_id):
