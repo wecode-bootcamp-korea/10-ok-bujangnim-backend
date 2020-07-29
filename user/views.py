@@ -1,7 +1,7 @@
 import json
 import jwt
 import bcrypt
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import User
 from django.views import View
 from django.http import JsonResponse, HttpResponse

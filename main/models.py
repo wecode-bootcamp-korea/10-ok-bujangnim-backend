@@ -2,10 +2,10 @@ from django.db import models
 
 # Create your models here.
 class Catalog(models.Model):
-    name = models.CharField(max_length = 255)
+    name         = models.CharField(max_length = 255)
     is_activated = models.CharField(max_length = 10, default='Y', null=False, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField()
+    created_at   = models.DateTimeField(auto_now_add=True)
+    updated_at   = models.DateTimeField()
 
     class Meta:
         db_table = 'catalogs'
@@ -14,14 +14,14 @@ class Catalog(models.Model):
         return self.name
 
 class Category(models.Model):
-    catalog = models.ForeignKey(Catalog, on_delete = models.CASCADE)
-    name = models.CharField(max_length = 255)
-    description_title = models.CharField(max_length=255, default='', null=True)
-    description = models.CharField(max_length=255, default='', null=True)
+    catalog             = models.ForeignKey(Catalog, on_delete = models.CASCADE)
+    name                = models.CharField(max_length = 255)
+    description_title   = models.CharField(max_length=255, default='', null=True)
+    description         = models.CharField(max_length=255, default='', null=True)
     description_content = models.CharField(max_length=255, default='', null=True)
-    is_activated = models.CharField(max_length = 10, default='Y', null=False, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField()
+    is_activated        = models.CharField(max_length = 10, default='Y', null=False, blank=True)
+    created_at          = models.DateTimeField(auto_now_add=True)
+    updated_at          = models.DateTimeField()
 
     class Meta:
         db_table = 'categories'

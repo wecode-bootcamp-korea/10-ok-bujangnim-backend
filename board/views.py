@@ -3,9 +3,14 @@ from django.http import JsonResponse
 # Create your views here.
 from django.views import View
 
-from board.models import FaceType
-from main.models import Catalog, Category
-
+from board.models import (
+    FaceType,
+    Product
+)
+from main.models import (
+    Catalog,
+    Category
+)
 
 class GetBoardByCatalog(View):
     def get(self, request, catalog_id):
@@ -24,7 +29,7 @@ class GetBoardByCatalog(View):
                 'id': product.id,
                 'category_id': product.category_id,
                 'name': product.name,
-                'image_url': product.image_set.all()[0].image_url,
+                'image_url': product.image_set.first().image_url,
                 'size': [
                     {
                         'id': size.id,
@@ -62,8 +67,8 @@ class GetBoardByCategory(View):
                 'id': product.id,
                 'category_id': product.category_id,
                 'name': product.name,
-                'image_url': product.image_set.all()[0].image_url,
-                'usability': product.usability_set.all()[0].usability,
+                'image_url': product.image_set.first().image_url,
+                'usability': product.usability_set.first().usability,
                 'size': [
                     {
                         'id': size.id,
@@ -84,3 +89,54 @@ class GetBoardByCategory(View):
         return JsonResponse({'result': 'SUCCESS',
                              'data': {'catalog': list(catalog), 'category': list(category_list),
                                       'products': list(product_items_result)}}, status=200)
+
+class GetProductById(View):
+    def get(self, request, product_id):
+        product_item = Product \
+            .objects.prefetch_related(
+            'pricebysize_set',
+            'image_set',
+            'facetypeproduct_set__faceType',
+            'usability_set',
+            'ingredient_set',
+            'howtouse_set', 'characteristic_set', 'recommendation_set__recommendationitems_set').filter(id=product_id)
+
+        product_result = [{
+            'id': product.id,
+            'category_id': product.category_id,
+            'image_url': product.image_set.first().image_url,
+            'name': product.name,
+            'description': product.description,
+            'skin_types': [
+                {
+                    'name': FaceType.objects.get(id=faceType.faceType_id).name
+                }
+                for faceType in product.facetypeproduct_set.all()
+
+            ],
+            'usability': product.usability_set.first().usability,
+            'main_ingredient': product.ingredient_set.first().main_ingredient,
+            'size': [
+                {
+                    'id': size.id,
+                    'size': size.size,
+                    'price': size.price
+                }
+                for size in product.pricebysize_set.all()
+            ],
+            'ingredient': product.ingredient_set.first().ingredient,
+            'sub_image_url': product.image_set.first().sub_image_url,
+            'method': product.howtouse_set.first().method,
+            'amount': product.howtouse_set.first().amount,
+            'texture': product.characteristic_set.first().texture,
+            'scent': product.characteristic_set.first().scent,
+            'recommendation_desctiption': product.recommendation_set.first().description,
+            'recommendation_items': [{
+                'id': recommendation_item.product.id,
+                'product': recommendation_item.product.name,
+                'image_url': recommendation_item.product.image_set.first().image_url
+            } for recommendation_item in product.recommendation_set.first().recommendationitems_set.all()]
+
+        } for product in product_item]
+
+        return JsonResponse({'result': 'SUCCESS', 'data': {'item': list(product_result)}}, status=200)

@@ -1,9 +1,7 @@
-from django.core import serializers
 from django.http import JsonResponse
-from django.shortcuts import render
 
 # Create your views here.
-from board.models import Product, Image
+from board.models import Image
 from main.models import Catalog
 
 
@@ -28,7 +26,7 @@ def get(request):
                     'id': product.id,
                     'category_id': product.category_id,
                     'name': product.name,
-                    'image_url': product.image_set.all()[0].image_url,
+                    'image_url': product.image_set.first().image_url,
                     'size': [
                         {
                             'id': size.id,

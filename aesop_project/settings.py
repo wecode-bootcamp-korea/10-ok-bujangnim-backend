@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'board',
     'user',
     'main',
-    'crawling',
     'corsheaders',
 
 ]
