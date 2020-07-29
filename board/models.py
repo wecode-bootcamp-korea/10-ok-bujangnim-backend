@@ -3,7 +3,6 @@ from django.db import models
 # Create your models here.
 from main.models import Category
 
-
 class Product(models.Model):
     category      = models.ForeignKey(Category,on_delete = models.CASCADE)
     name          = models.CharField(max_length = 255)

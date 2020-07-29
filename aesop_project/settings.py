@@ -26,7 +26,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -40,7 +39,6 @@ INSTALLED_APPS = [
     'user',
     'main',
     'corsheaders',
-
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
