@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 class Catalog(models.Model):
     name         = models.CharField(max_length = 255)
-    is_activated = models.CharField(max_length = 10, default='Y', null=False, blank=True)
+    is_activated = models.BooleanField(default=True, null=False, blank=True)
     created_at   = models.DateTimeField(auto_now_add=True)
     updated_at   = models.DateTimeField()
 
@@ -19,7 +19,7 @@ class Category(models.Model):
     description_title   = models.CharField(max_length=255, default='', null=True)
     description         = models.CharField(max_length=255, default='', null=True)
     description_content = models.CharField(max_length=255, default='', null=True)
-    is_activated        = models.CharField(max_length = 10, default='Y', null=False, blank=True)
+    is_activated        = models.BooleanField(default=True, null=False, blank=True)
     created_at          = models.DateTimeField(auto_now_add=True)
     updated_at          = models.DateTimeField()
 

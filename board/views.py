@@ -1,15 +1,12 @@
-from django.shortcuts import render
 from django.http import JsonResponse
 # Create your views here.
 from django.views import View
-
 from board.models import (
     FaceType,
     Product
 )
 from main.models import (
-    Catalog,
-    Category
+    Catalog, Category
 )
 
 class GetBoardByCatalog(View):
@@ -18,11 +15,11 @@ class GetBoardByCatalog(View):
             'category_set',
             'category_set__product_set',
             'category_set__product_set__pricebysize_set',
-            'category_set__product_set__image_set').filter(id=catalog_id, is_activated='Y')
+            'category_set__product_set__image_set').filter(id=catalog_id, is_activated=True)
 
         data = {
             'catalog': list(product_data.values()),
-            'category': list(product_data.first().category_set.values()),
+            'category': list(product_data.first().category_set.filter(is_activated=True).values()),
             'item': [{
                 'category_info': {
                     'id': category.id,
@@ -43,7 +40,7 @@ class GetBoardByCatalog(View):
                         for size in product.pricebysize_set.all()
                     ]
                 } for product in category.product_set.all()]
-            }for category in product_data[0].category_set.all()]
+            }for category in product_data[0].category_set.filter(is_activated=True).all()]
         }
         return JsonResponse({'result': 'SUCCESS',
                              'data': data}, status=200)
@@ -54,7 +51,7 @@ class GetBoardByCategory(View):
             'category_set',
             'category_set__product_set',
             'category_set__product_set__pricebysize_set',
-            'category_set__product_set__image_set').filter(id=catalog_id, is_activated='Y')
+            'category_set__product_set__image_set').filter(id=catalog_id, is_activated=True)
 
         data = {
             'catalog': list(product_data.values()),
@@ -63,7 +60,8 @@ class GetBoardByCategory(View):
                 'category_info': {
                     'id': category.id,
                     'name': category.name,
-                    'description': category.description
+                    'description_title': category.description_title,
+                    'description_content': category.description_content
                 },
                 'next_category': product_data.first().category_set.values()[category_id],
                 'products': [{
@@ -83,8 +81,8 @@ class GetBoardByCategory(View):
                     ,
                     'skin_types': [
                         {
-                            'name': FaceType.objects.get(id=faceType.faceType_id).name
-                        } for faceType in product.facetypeproduct_set.all()
+                            'name': FaceType.objects.get(id=face_type.face_type_id).name
+                        } for face_type in product.facetypeproduct_set.all()
                     ],
                 } for product in category.product_set.all()]
             }for category in product_data.first().category_set.filter(id=category_id).all()]
@@ -98,7 +96,7 @@ class GetProductById(View):
             .objects.prefetch_related(
             'pricebysize_set',
             'image_set',
-            'facetypeproduct_set__faceType',
+            'facetypeproduct_set__face_type',
             'usability_set',
             'ingredient_set',
             'howtouse_set', 'characteristic_set', 'recommendation_set__recommendationitems_set').filter(id=product_id).first()
@@ -106,14 +104,15 @@ class GetProductById(View):
         product_result = {
             'id': product_item.id,
             'category_id': product_item.category_id,
+            'category_name': Category.objects.filter(id=product_item.category_id).first().name,
             'image_url': product_item.image_set.first().image_url,
             'name': product_item.name,
             'description': product_item.description,
             'skin_types': [
                 {
-                    'name': FaceType.objects.get(id=faceType.faceType_id).name
+                    'name': FaceType.objects.get(id=face_type.face_type.id).name
                 }
-                for faceType in product_item.facetypeproduct_set.all()
+                for face_type in product_item.facetypeproduct_set.all()
 
             ],
             'usability': product_item.usability_set.first().usability,
@@ -132,7 +131,7 @@ class GetProductById(View):
             'amount': product_item.howtouse_set.first().amount,
             'texture': product_item.characteristic_set.first().texture,
             'scent': product_item.characteristic_set.first().scent,
-            'recommendation_desctiption': product_item.recommendation_set.first().description,
+            'recommendation_description': product_item.recommendation_set.first().description,
             'recommendation_items': [{
                 'id': recommendation_item.product.id,
                 'product': recommendation_item.product.name,
@@ -141,4 +140,4 @@ class GetProductById(View):
 
         }
 
-        return JsonResponse({'result': 'SUCCESS', 'data': product_result}, status=200)
+        return JsonResponse({'result': 'SUCCESS', 'data': [product_result]}, status=200)
