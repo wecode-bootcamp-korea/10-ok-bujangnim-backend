@@ -22,5 +22,6 @@ urlpatterns = [
     path('main', include('main.urls')),
     path('board', include('board.urls')),
     path('crawling',include('crawling.urls')),
-    path('sub',include('sub.urls'))
+    path('sub',include('sub.urls')),
+    path('cart',include('cart.urls'))
 ]

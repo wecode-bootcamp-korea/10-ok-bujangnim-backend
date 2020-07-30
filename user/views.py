@@ -7,20 +7,22 @@ from django.views import View
 from django.http import JsonResponse, HttpResponse
 from django.db import IntegrityError
 from aesop_project.settings import SECRET_KEY
-#from django.core.exceptions import ObjectDoesNotExist
+import re
+from django.core.exceptions import ObjectDoesNotExist
 class SignUpView(View):
     def post(self,request):
         data = json.loads(request.body)
         try:
             if User.objects.filter(email = data['email']).exists():
                 return JsonResponse({'message' : 'Existing-Account'}, status = 401)
-            if('@' in data['email']) and( len(data['password']) >= 5 and):
+            if('@' in data['email'])  and re.compile("[A-Z]").search(data['password']):
+               # bool(re.search("[A-Z]", data['password']))
                 hashed_password = bcrypt.hashpw(data['password'].encode('utf-8'),bcrypt.gensalt())
                 User(
-                    email = data['email'],
+                    email      = data['email'],
                     first_name = data['first_name'],
-                    last_name = data['last_name'],
-                    password = hashed_password.decode('utf-8')
+                    last_name  = data['last_name'],
+                    password   = hashed_password.decode('utf-8')
                    # password = data['password']
                 ).save()
                 return JsonResponse({'message' : 'success'}, status = 200)
@@ -28,22 +30,24 @@ class SignUpView(View):
         except KeyError:
             return JsonResponse({'message' :'KEY_ERROR'},status = 400)
 
-# def login_decorator(func):
-#     def wrapper(self, request, *args, **kwargs):
-#         if "Authorization" not in request.headers:
-#             return JsonResponse({'error_code' : 'Invalid_Login'}, status = 401)
-#         encode_token = request.headers["Authorization"]
+def login_decorator(func):
+    def wrapper(self, request, *args, **kwargs):
+        if "Authorization" not in request.headers:
+            return JsonResponse({'error_code' : 'Invalid_Login'}, status = 401)
+        encode_token = request.headers["Authorization"]
 
-#         try:
-#             data = jwt.decode(encode_token, SECRET_KEY, algorithm = 'HS256')
-#             user = User.objects.get(id=data['id'])
-#             request.user = user
-#         except jwt.DecodeError:
-#             return JsonResponse({'message' : "Invalid Token"}, status = 401)
-#         except User.DoesNotExist:
-#             return JsonResponse({'message' : "Not Exist User"},status = 401)
-#         return func(self, request, *args, **kwargs)
-#     return wrapper
+        try:
+            data = jwt.decode(encode_token, SECRET_KEY, algorithm = 'HS256')
+            user = User.objects.get(email=data['email'])
+            print(user)
+            request.user = user
+            return func(self, request, *args, **kwargs)
+        except jwt.DecodeError:
+            return JsonResponse({'message' : "Invalid Token"}, status = 401)
+        except User.DoesNotExist:
+            return JsonResponse({'message' : "Not Exist User"},status = 401)
+        
+    return wrapper
 
 class SignInView(View):
     def post(self, request):
@@ -60,11 +64,12 @@ class SignInView(View):
             return JsonResponse({'message' :'오타'}, status = 400)
 
 class TokenCheckView(View):
+    @login_decorator
     def post(self,request):
-        data = json.loads(request.body)
-        data_token_info = jwt.decode(data['token'], SECRET_KEY, algorithm = 'HS256')
-        if User.objects.filter(email=data_token_info['user']).exists():
-            return HttpResponse(status = 200)
-        return HttpResponse(status=403)
+       # data = json.loads(request.body)
+      #  data_token_info = jwt.decode(data['token'], SECRET_KEY, algorithm = 'HS256')
+       # if User.objects.filter(email=data_token_info['user']).exists():
+           # return HttpResponse(status = 200)
+           return JsonResponse({"id" : request.user.email},status = 200)
 
 

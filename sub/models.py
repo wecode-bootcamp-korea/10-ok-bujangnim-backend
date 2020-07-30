@@ -18,7 +18,7 @@ class Subtitle(models.Model):
     
 
     class Meta:
-        db_table = 'subtitles'
+        db_table = 'subtitle'
 
     def __str__(self):
         return self.name
