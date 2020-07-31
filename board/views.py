@@ -63,7 +63,18 @@ class GetBoardByCategory(View):
                     'description_title': category.description_title,
                     'description_content': category.description_content
                 },
-                'next_category': product_data.first().category_set.values()[category_id],
+                'next_category': {
+                    'id': product_data.first().category_set.values()[category_id]['id'],
+                    'catalog_id': product_data.first().category_set.values()[category_id]['catalog_id'],
+                    'name': product_data.first().category_set.values()[category_id]['name'],
+                    'description_title': product_data.first().category_set.values()[category_id]['description_title'],
+                    'description': product_data.first().category_set.values()[category_id]['description'],
+                    'description_content': product_data.first().category_set.values()[category_id]['description_content'],
+                    'is_activated': product_data.first().category_set.values()[category_id]['is_activated'],
+                    'image_url': category.product_set.filter(category_id=category_id)
+                        .first().image_set.first().image_url
+
+                },
                 'products': [{
                     'id': product.id,
                     'category_id': product.category_id,
